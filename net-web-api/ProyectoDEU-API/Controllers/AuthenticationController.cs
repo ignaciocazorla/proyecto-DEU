@@ -35,7 +35,8 @@ namespace ProyectoDEU_API.Controllers
         {
             var response = new LoginResponse
             {
-                Username = model?.Username,
+                //Username = model?.Username,
+                User = new UserResponse(),
                 IsValid = false
             };
 
@@ -77,13 +78,15 @@ namespace ProyectoDEU_API.Controllers
                     response.Status = LoginStatus.Success;
                     response.IsValid = loginIsValid;
                     response.AuthToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+                    response.User.Username = model.Username;
                     if (userRoles != null)
                     {
-                        response.Rol = userRoles.FirstOrDefault();
+                        response.User.Rol = userRoles.FirstOrDefault();
                     }
+                    response.User.Id = user.Id;
 
                     //response.SessionId = session?.Id;
-                    //response.UserId = user.Id; va en el token
 
                     //user.LastLoginDate = DateTimeOffset.Now;
                     await userManager.UpdateAsync(user);

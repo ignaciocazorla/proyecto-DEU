@@ -22,13 +22,18 @@ namespace ProyectoDEU_API.Controllers
 
         // GET: api/Cursos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Curso>>> GetCursos()
+        public IActionResult GetCursos()
         {
-          if (_context.Cursos == null)
-          {
-              return NotFound();
-          }
-            return await _context.Cursos.ToListAsync();
+            if (_context.Cursos == null)
+            {
+                return NotFound();
+            }
+            var result = _context.Cursos
+                .Include(e => e.Estudiantes)
+                .Include(e => e.Docente)
+                .AsQueryable();
+
+            return Ok(result.OrderBy(e => e.Nombre).AsQueryable());
         }
 
         // GET: api/Cursos/5
@@ -47,6 +52,19 @@ namespace ProyectoDEU_API.Controllers
             }
 
             return curso;
+        }
+
+        [HttpGet("docente/{id}")]
+        public IActionResult GetCursosPorDocente(Guid docenteId)
+        {
+            if (docenteId == null)
+            {
+                return BadRequest();
+            }
+            var result = _context.Cursos.Where(e => e.IdDocente == docenteId).AsQueryable();
+            if (result.Count() == 0)
+                return NotFound();
+            return Ok(result.OrderBy(e => e.Nombre).AsQueryable());
         }
 
         // PUT: api/Cursos/5
@@ -128,6 +146,23 @@ namespace ProyectoDEU_API.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        // POST: api/Cursos/inscribir
+        [HttpPost("inscribir")]
+        public async Task<IActionResult> InscribirEstudiante([FromBody] InscripcionCurso inscripcion)
+        {
+            if (!CursoExists(inscripcion.CursoId))
+            {
+                return BadRequest();
+            }
+            var curso = await _context.Cursos.FindAsync(inscripcion.CursoId);
+            var estudiante = await _context.Estudiantes.FindAsync(inscripcion.EstudianteId);
+
+            curso.Estudiantes.Add(estudiante);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
         private bool CursoExists(Guid id)

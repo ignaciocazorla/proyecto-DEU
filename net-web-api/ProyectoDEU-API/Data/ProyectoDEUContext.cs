@@ -51,7 +51,7 @@ namespace ProyectoDEU_API
 
                 entity.Property(e => e.Nombre).HasMaxLength(100);
 
-                entity.HasOne(d => d.IdDocenteNavigation)
+                entity.HasOne(d => d.Docente)
                     .WithMany(p => p.Cursos)
                     .HasForeignKey(d => d.IdDocente)
                     .HasConstraintName("FK_Curso_Docente1");
@@ -100,8 +100,8 @@ namespace ProyectoDEU_API
 
                 entity.Property(e => e.Nombre).HasMaxLength(256);
 
-                entity.HasMany(d => d.IdCursos)
-                    .WithMany(p => p.IdEstudiantes)
+                entity.HasMany(d => d.Cursos)
+                    .WithMany(p => p.Estudiantes)
                     .UsingEntity<Dictionary<string, object>>(
                         "EstudianteCurso",
                         l => l.HasOne<Curso>().WithMany().HasForeignKey("IdCurso").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_EstudianteCurso_Curso1"),

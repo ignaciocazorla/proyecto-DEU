@@ -7,12 +7,12 @@ namespace ProyectoDEU_API
     {
         public Estudiante()
         {
-            IdCursos = new HashSet<Curso>();
+            Cursos = new HashSet<Curso>();
         }
 
         public Guid Id { get; set; }
         public string Nombre { get; set; } = null!;
 
-        public virtual ICollection<Curso> IdCursos { get; set; }
+        public virtual ICollection<Curso> Cursos { get; set; }
     }
 }
