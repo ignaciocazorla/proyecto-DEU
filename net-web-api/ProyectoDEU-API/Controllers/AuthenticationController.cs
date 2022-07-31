@@ -77,6 +77,11 @@ namespace ProyectoDEU_API.Controllers
                     response.Status = LoginStatus.Success;
                     response.IsValid = loginIsValid;
                     response.AuthToken = new JwtSecurityTokenHandler().WriteToken(token);
+                    if (userRoles != null)
+                    {
+                        response.Rol = userRoles.FirstOrDefault();
+                    }
+
                     //response.SessionId = session?.Id;
                     //response.UserId = user.Id; va en el token
 
