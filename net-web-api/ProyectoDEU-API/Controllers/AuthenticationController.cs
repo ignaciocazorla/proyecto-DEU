@@ -115,10 +115,10 @@ namespace ProyectoDEU_API.Controllers
             var userExists = await userManager.FindByNameAsync(model.Username);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
-
+            var id = Guid.NewGuid();
             AppUser user = new()
             {
-                Id = Guid.NewGuid(),
+                Id = id,
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username
@@ -146,7 +146,7 @@ namespace ProyectoDEU_API.Controllers
                 _context.Docentes.Add(new Docente
                 {
                     Nombre = user.UserName,
-                    Id = Guid.NewGuid()
+                    Id = id
                 });
             }
             else // es estudiante
@@ -162,7 +162,7 @@ namespace ProyectoDEU_API.Controllers
                 _context.Estudiantes.Add(new Estudiante
                 {
                     Nombre = user.UserName,
-                    Id = Guid.NewGuid()
+                    Id = id
                 });
             }
 
