@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, } from '@ionic/vue';
+import {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonLabel, IonBackButton, IonInput, } from '@ionic/vue';
 import axios from 'axios';
 import { loading } from '../overlay-views/loading.js';
 import { alertDialog } from '../overlay-views/alertDialog.js';
@@ -32,19 +32,17 @@ export default({
         nombreCurso: ''
     };
   },
-  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput },
+  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonLabel, IonBackButton, IonInput },
 
   methods: {
-    async postCurso() {
+    postCurso() {
         //console.log(this.nombreCurso);
         /*const loading = await loadingController.create({
           message: 'Creando curso...',
           //duration: 3000
         });
         loading.present();*/
-        await loading.create();
-        loading.setMessage('Creando curso...');
-        loading.show();
+        loading.showMsg("Creando curso...");
 
         axios.post("/api/Cursos", {
             "id": "3fa85f64-5717-4562-b3fc-2c963f66af34",
@@ -54,7 +52,7 @@ export default({
             loading.hide();  
             alertDialog.showAlertMsg("Curso creado con exito!");
             console.log(resp.data);
-            this.$store.dispatch('add', resp.data);
+            this.$store.dispatch('cursos/add', resp.data);
         })
         .catch(err => {
             loading.hide();

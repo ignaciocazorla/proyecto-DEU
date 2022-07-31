@@ -9,34 +9,94 @@
             </ion-toolbar>
         </ion-header>
         <ion-content>
-            <h2>probando detalle curso {{ cursoId }}</h2>
-            <!--<h3 v-if="!loadedCurso">Ups, algo no anda</h3>-->
+            <ion-list>
+              <ion-card button router-link="recursos/add">
+                 <ion-card-header>
+                  <ion-card-title> + Agregar nuevo recurso</ion-card-title>
+                </ion-card-header>
+              </ion-card>
+              
+              <h1 class="empty-list-msg" v-if="recursos.length == 0"> No hay elementos para mostrar</h1>
+
+              <div v-bind:key="recurso.id" v-for="recurso in recursos">
+                <ion-card button :router-link="`recursos/${recurso.id}`">
+                  <ion-card-header>
+                    <ion-card-title> {{ recurso.titulo }} </ion-card-title>
+                  </ion-card-header>
+                </ion-card>
+                <ion-button size="small" fill="outline" @click="deleteRecurso(recurso.id)">Eliminar</ion-button>
+                <ion-button size="small" fill="outline">Modificar</ion-button>
+              </div>
+            </ion-list>
         </ion-content>
     </ion-page>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
-import {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton } from '@ionic/vue';
-//import axios from 'axios';
+import {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonBackButton, IonList, IonCard, IonCardHeader, /*IonCardContent,*/ IonCardTitle, } from '@ionic/vue';
+import axios from 'axios';
+import { loading } from '../overlay-views/loading.js';
+import { alertDialog } from '../overlay-views/alertDialog.js';
 
 export default defineComponent({
   name: 'DetalleCursos',
-  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton },
+  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonBackButton, IonList, IonCard, IonCardHeader, /*IonCardContent,*/ IonCardTitle, },
   data () {
     return {
         cursoId: this.$route.params.id,
     };
   },
-  mounted() {
-    //console.log("Estoy imprimiendo!");
-    /*axios.get("/api/Docentes/3fa85f64-5717-4562-b3fc-2c963f66afa6")
-    .then(response => console.log(response));*/
-  }
-  /*computed: {
-    loadedCurso() {
-        return this.$store.getters.curso(this.cursitoId);
+  methods:{
+    deleteRecurso(id){
+      alertDialog.showAlertMsgWithButtons("Esta acción no se puede deshacer. ¿Seguro que quiere eliminar el recurso?",
+        [
+          {
+            text: 'Eliminar',
+            role: 'delete',
+            handler: () => { this.handlerMessage = this.delete(id); }
+          },
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+          }
+        ]
+      )
     },
-  }*/
+
+    async delete(id){
+
+      loading.showMsg('Eliminando recurso...');
+
+      axios.delete("/api/Recursos/" + id)
+      .then(() => {
+        loading.hide();  
+        alertDialog.showAlertMsg("Recurso eliminado!");
+        this.$store.dispatch('recursos/delete', id);
+      })
+      .catch(err => {
+            loading.hide();
+            alertDialog.showAlertMsg("No se pudo eliminar el recurso. Error: " + err.message);
+      });
+    },
+
+  },
+  mounted() {
+    loading.showMsg("Cargando recursos...");
+    axios.get("/api/Recursos/")
+    .then(resp => {
+        this.$store.dispatch("recursos/load",resp.data);
+        loading.hide();
+    })
+    .catch(err => {
+      console.log(err);
+      loading.hide();
+    })
+  },
+  computed: {
+    recursos() {
+      return this.$store.getters["recursos/recursos"]
+    },
+  }
 });
 </script>

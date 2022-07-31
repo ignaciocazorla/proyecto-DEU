@@ -36,6 +36,11 @@ export default defineComponent({
       square, 
       triangle,
     }
-  }
+  }/*,
+  methods: {
+    switchTab() {
+      document.getElementById("panel-cursos").focus();
+    },
+  }*/
 });
 </script>

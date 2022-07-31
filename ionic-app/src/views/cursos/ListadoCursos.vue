@@ -4,13 +4,16 @@
           <ion-item router-link="cursos/add" >
             <ion-button class="boton-agregar-item">+ Nuevo curso </ion-button>
           </ion-item>
-  
-          <h1 class="empty-list-msg" v-if="cursos.length == 0"> No hay elementos para mostrar</h1>
-          <ion-item button ref="listItem" v-bind:key="curso.id" v-for="curso in cursos">
-            <ion-label tabindex="0" :router-link="`cursos/${curso.id}`">
+
+          <ion-text>
+            <p class="empty-list-msg" v-if="cursos.length == 0"> No hay elementos para mostrar.</p>
+          </ion-text>
+
+          <ion-item ref="listItem" v-bind:key="curso.id" v-for="curso in cursos"> <!--Agregar palabra button en el item para que se tome como boton-->
+            <ion-button tabindex="0" :router-link="`cursos/${curso.id}`" key="">
               <strong>{{curso.nombre}}</strong> <br>
-              <p>Cant. de estudiantes: {{curso.estudiantes}}</p>
-            </ion-label>
+              <!-- <p>Cant. de estudiantes: {{curso.idEstudiates}}</p> -->
+            </ion-button>
             <!-- <ion-button button id="click-trigger" slot="end"> -->
             <ion-button button @click="openPopover($event, curso.id)" slot="end">
               <!--<ion-icon slot="icon-only" :icon="ellipsisVertical"></ion-icon> -->
@@ -21,10 +24,8 @@
             :is-open="popoverOpen"
             :event="event"
             @didDismiss="popoverOpen = false">
-            <ion-content>
               <ion-item :id="`${curso.id}`" button @click="deleteCurso(this.popoverCursoId)">Eliminar curso</ion-item>
               <ion-item button @click="closePopover()" :router-link="`cursos/update/${this.popoverCursoId}`">Modificar nombre</ion-item>
-            </ion-content>
           </ion-popover>
           </ion-item>
         </ion-list>
@@ -32,7 +33,7 @@
 </template>
 
 <script>
-import { IonList, IonItem, IonLabel, IonButton, /*IonIcon,*/ IonPopover, } from '@ionic/vue';
+import { IonList, IonItem, /*IonLabel,*/ IonButton, /*IonIcon,*/ IonPopover, IonText} from '@ionic/vue';
 import TabsBase from "../../components/base/TabsBase.vue";
 //import { chevronForwardOutline, ellipsisVertical } from 'ionicons/icons';
 import axios from 'axios';
@@ -44,11 +45,12 @@ export default({
   components: {
     IonList,
     IonItem,
-    IonLabel,
+    /*IonLabel,*/
     TabsBase,
     IonButton,
     IonPopover,
-    //IonIcon
+    //IonIcon,
+    IonText,
   },
   data() {
     return {
@@ -58,13 +60,15 @@ export default({
     }
   },
   async mounted() {
+
+    //console.log(this.$store.getters["usuario/usuario"])
     
     loading.showMsg('Cargando cursos...');
 
     axios.get("/api/Cursos/")
     .then(resp => {
         console.log(resp);
-        this.$store.commit('load',resp.data);
+        this.$store.commit("cursos/load",resp.data);
         loading.hide();
     })
     .catch(err => {
@@ -105,7 +109,7 @@ export default({
       .then(() => {
         loading.hide();  
         alertDialog.showAlertMsg("Curso eliminado!");
-        this.$store.dispatch('delete', id);
+        this.$store.dispatch('cursos/delete', id);
       })
       .catch(err => {
             loading.hide();
@@ -120,7 +124,7 @@ export default({
   },
   computed: {
     cursos() {
-      return this.$store.getters.cursos;
+      return this.$store.getters["cursos/cursos"];
     }
   },
   setup(){
@@ -140,7 +144,9 @@ export default({
 
 .empty-list-msg{
   text-align: center;
+  position: relative;
   left: 0;
   right: 0;
 }
+
 </style>

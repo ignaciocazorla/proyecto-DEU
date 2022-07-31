@@ -10,7 +10,7 @@
         </ion-header>
         <ion-content>
             <div class="form-container">
-                <form v-on="curso">
+                <form v-on="curso" v-if="curso != undefined">
                 <ion-label for="nombreCurso">Nombre del curso:</ion-label>
                 <ion-input type="text" v-model="nombreCurso" :value="curso.nombre" />
                 <ion-button @click="updateCurso(curso, nombreCurso)">Modificar</ion-button>
@@ -34,16 +34,32 @@ export default {
             axios.put("/api/Cursos/" + curso.id,{
                 "id": curso.id,
                 "nombre": nuevoNombre
-                }).then(resp => {
+                }).then(() => {
                     loading.hide();
                     alertDialog.showAlertMsg("Curso modificado satisfactoriamente!");
                     curso.nombre = nuevoNombre;
                 });
             }
     },
+    mounted(){
+        let curso = this.$store.getters["cursos/curso"](this.$route.params.id);
+        if(curso == undefined){
+            loading.showMsg("Cargando...");
+            axios.get("/api/Cursos/" + this.$route.params.id)
+            .then(resp => {
+                console.log(resp);
+                this.$store.commit("cursos/load",[resp.data]);
+                loading.hide();
+            })
+            .catch(err => {
+            console.log(err);
+            loading.hide();
+            });
+        }
+    },
     computed:{
         curso(){
-            return this.$store.getters.curso(this.$route.params.id);
+            return this.$store.getters["cursos/curso"](this.$route.params.id);
         }
     }
 }
