@@ -9,8 +9,8 @@
             </ion-toolbar>
         </ion-header>
         <ion-content>
-            <ion-list>
-              <ion-card button router-link="recursos/add">
+            <ion-list tabindex="0">
+              <ion-card v-if="(this.$store.getters['usuario/usuario'].rol == 'Docente')" @click="storeIdCurso()" button router-link="recursos/add">
                  <ion-card-header>
                   <ion-card-title> + Agregar nuevo recurso</ion-card-title>
                 </ion-card-header>
@@ -24,8 +24,8 @@
                     <ion-card-title> {{ recurso.titulo }} </ion-card-title>
                   </ion-card-header>
                 </ion-card>
-                <ion-button size="small" fill="outline" @click="deleteRecurso(recurso.id)">Eliminar</ion-button>
-                <ion-button size="small" fill="outline">Modificar</ion-button>
+                <ion-button v-if="(this.$store.getters['usuario/usuario'].rol == 'Docente')" size="small" fill="outline" @click="deleteRecurso(recurso.id)">Eliminar</ion-button>
+                <ion-button v-if="(this.$store.getters['usuario/usuario'].rol == 'Docente')" size="small" fill="outline">Modificar</ion-button>
               </div>
             </ion-list>
         </ion-content>
@@ -48,6 +48,10 @@ export default defineComponent({
     };
   },
   methods:{
+    storeIdCurso(){
+      this.$store.commit("cursos/loadCursoActual", this.cursoId);
+    },
+
     deleteRecurso(id){
       alertDialog.showAlertMsgWithButtons("Esta acción no se puede deshacer. ¿Seguro que quiere eliminar el recurso?",
         [
@@ -83,7 +87,7 @@ export default defineComponent({
   },
   mounted() {
     loading.showMsg("Cargando recursos...");
-    axios.get("/api/Recursos/")
+    axios.get("/api/Recursos/Curso/" + this.cursoId)
     .then(resp => {
         this.$store.dispatch("recursos/load",resp.data);
         loading.hide();

@@ -4,7 +4,8 @@ const cursos = {
     namespaced: true,
     state () {
         return {
-            cursos: []
+            cursos: [],
+            cursoActual: null,
         };
     },
     getters: {
@@ -16,6 +17,9 @@ const cursos = {
                 return state.cursos.find((curso) => curso.id == cursoId);
             };
         },
+        cursoActual(state) {
+            return state.cursoActual;
+        },
     },
     mutations: {
         load(state, data){
@@ -26,6 +30,10 @@ const cursos = {
         },
         delete(state, id){
             state.cursos = state.cursos.filter((curso) => curso.id != id);
+        },
+        loadCursoActual(state, cursoActual){
+            console.log(cursoActual);
+            state.cursoActual = cursoActual;
         }
     },
     actions:{
@@ -100,32 +108,56 @@ const usuario = {
     },
     mutations: {
         login(state, data){
-            state.usuario = data.username;
+            state.usuario = data.user;
             state.authToken = data.authToken;
         },
-        add(state, recurso){
-            state.recursos.push(recurso);
-        },
-        delete(state, id){
-            state.recursos = state.recursos.filter((recurso) => recurso.id != id);
-        }
     },
     actions:{
         login(context, data){
             context.commit('login', data);
         },
-        add(context, id){
-            context.commit('add', id);
+    }
+}
+
+const busquedaCursos = {
+    namespaced: true,
+    state () {
+        return {
+            busquedaCursos: [],
+        };
+    },
+    getters: {
+        busquedaCursos(state) {
+            return state.busquedaCursos;
+        },
+        busquedaCurso(state) {
+            return (cursoId) => {
+                return state.busquedaCursos.find((curso) => curso.id == cursoId);
+            };
+        },
+    },
+    mutations: {
+        load(state, data){
+            state.busquedaCursos = data;
+        },
+        delete(state, id){
+            state.busquedaCursos = state.busquedaCursos.filter((curso) => curso.id != id);
+        },
+    },
+    actions:{
+        load(context, id){
+            context.commit('load', id);
         },
         delete(context, id){
             context.commit('delete', id);
         }
     }
-}
+};
 
 const store = createStore({
     modules:{
         cursos: cursos,
+        busquedaCursos: busquedaCursos,
         recursos: recursos,
         usuario: usuario,
     }

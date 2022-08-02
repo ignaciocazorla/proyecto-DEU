@@ -3,7 +3,7 @@
         <ion-header>
         </ion-header>
         <ion-content fullscreen="true">
-            <div id="container">
+            <div class="container ion-padding ion-align-self-center">
                 <h1> NombreDeLaApp </h1>
                 <p> NombreDeLaApp te permite gestionar y acceder tus materiales educativos. 
                     Ádemas es una herramienta que permite enseñar y aprender de una manera distinta.
@@ -29,10 +29,12 @@ export default {
 
 <style scoped>
 #container {
-  text-align: center;
+  top: 500px;
+  transform: translate(-50%, -50%);
+  /*text-align: center;
   position: absolute;
-  left: 0;
-  right: 0;
+  left: 50%;
+  right: 50%;*/
 }
 
 </style>

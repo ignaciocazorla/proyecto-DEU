@@ -3,7 +3,6 @@ import App from './App.vue'
 import router from './router';
 import store from './store';
 import axios from 'axios';
-import { loading } from './views/overlay-views/loading.js'
 
 import { IonicVue } from '@ionic/vue';
 
@@ -32,8 +31,7 @@ axios.defaults.baseURL = "https://localhost:7223/"
 const app = createApp(App)
   .use(IonicVue)
   .use(router)
-  .use(store)
-  .use(loading);
+  .use(store);
 
 router.isReady().then(() => {
   app.mount('#app');

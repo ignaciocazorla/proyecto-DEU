@@ -14,7 +14,9 @@
                 <ion-label for="tituloRecurso">Titulo del recurso:</ion-label>
                 <ion-input type="text" v-model="tituloRecurso" />
                 <ion-label for="textoRecurso">Texto del recurso:</ion-label>
-                <ion-textarea type="text" v-model="textoRecurso"></ion-textarea>
+                <ion-item>
+                    <ion-textarea type="text" v-model="textoRecurso"></ion-textarea>
+                </ion-item>
                 <ion-button @click="postRecurso">Crear</ion-button>
                 </form>
             </div>
@@ -41,10 +43,12 @@ export default({
     postRecurso() {
         loading.showMsg('Creando recurso...');
 
+        console.log(this.$store.getters["cursos/cursoActual"])
+
         axios.post("/api/Recursos", {
-            "id": "3fa85f64-5717-4562-b3fc-2c963f66af37",
             "titulo": this.tituloRecurso,
             "texto": this.textoRecurso,
+            "IdCurso": this.$store.getters["cursos/cursoActual"],
         }).then(resp => {
             loading.hide();  
             alertDialog.showAlertMsg("Recurso creado con exito!");
