@@ -1,11 +1,17 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ProyectoDEU_API;
+using ProyectoDEU_API.Models.Authentication;
 
 namespace ProyectoDEU_API.Controllers
 {
@@ -14,10 +20,13 @@ namespace ProyectoDEU_API.Controllers
     public class CursosController : ControllerBase
     {
         private readonly ProyectoDEUContext _context;
+        private readonly IConfiguration _configuration;
 
-        public CursosController(ProyectoDEUContext context)
+
+        public CursosController(ProyectoDEUContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: api/Cursos
@@ -54,17 +63,61 @@ namespace ProyectoDEU_API.Controllers
             return curso;
         }
 
-        [HttpGet("docente/{id}")]
-        public IActionResult GetCursosPorDocente(Guid docenteId)
+        [HttpGet("usuario")]
+        public IActionResult GetCursosPorUsuario()
         {
-            if (docenteId == null)
+
+            //if (docenteId == null)
+            //{
+            //    return BadRequest();
+            //}
+            var request = HttpContext.Request;
+            var token = default(string);
+
+            if (request.Headers.ContainsKey("Authorization"))
             {
-                return BadRequest();
+                if (AuthenticationHeaderValue.TryParse(request.Headers["Authorization"], out AuthenticationHeaderValue authorizationHeader))
+                {
+                    if (String.Equals(authorizationHeader.Scheme, "Bearer", StringComparison.InvariantCultureIgnoreCase))
+                        token = authorizationHeader.Parameter;
+                }
             }
-            var result = _context.Cursos.Where(e => e.IdDocente == docenteId).AsQueryable();
-            if (result.Count() == 0)
-                return NotFound();
-            return Ok(result.OrderBy(e => e.Nombre).AsQueryable());
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenClaims = tokenHandler.ValidateToken(token,
+                new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(_configuration.GetSection("JWT").GetValue<byte[]>("Secret")),
+                    ValidateLifetime = true,
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+
+            var rol = tokenClaims.FindFirst(ClaimTypes.Role)?.Value;
+            Guid userid = Guid.Parse(tokenClaims.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            IQueryable<Curso> result = new List<Curso>().AsQueryable();
+            if (rol == UserRoles.Docente)
+            {
+                result = _context.Cursos
+                        .Where(e => e.IdDocente == userid)
+                        //.Include(c => c.Docente)
+                        .AsQueryable();
+            }
+            if (rol == UserRoles.Estudiante)
+            {
+                Estudiante estudiante = _context.Estudiantes.FindAsync(userid).Result;
+                result = _context.Cursos
+                         .Where(e => e.Estudiantes.Contains(estudiante))
+                         //.Include(c => c.Docente)
+                         .AsQueryable();
+            }
+
+            
+            //if (result.Count() == 0)
+            //    return NotFound();
+            return Ok(result);
         }
 
         // PUT: api/Cursos/5
