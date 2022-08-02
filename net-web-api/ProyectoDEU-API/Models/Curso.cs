@@ -9,6 +9,7 @@ namespace ProyectoDEU_API
         {
             Quizzes = new HashSet<Quiz>();
             Estudiantes = new HashSet<Estudiante>();
+            Recursos = new HashSet<Recurso>();
         }
 
         public Guid Id { get; set; }
