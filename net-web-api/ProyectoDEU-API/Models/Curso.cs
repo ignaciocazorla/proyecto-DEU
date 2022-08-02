@@ -18,5 +18,6 @@ namespace ProyectoDEU_API
         public virtual Docente? Docente{ get; set; }
         public virtual ICollection<Quiz> Quizzes { get; set; }
         public virtual ICollection<Estudiante> Estudiantes { get; set; }
+        public virtual ICollection<Recurso> Recursos { get; set; }
     }
 }

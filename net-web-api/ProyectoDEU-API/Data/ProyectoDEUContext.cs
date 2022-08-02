@@ -152,6 +152,11 @@ namespace ProyectoDEU_API
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Titulo).HasMaxLength(100);
+
+                entity.HasOne(d => d.Curso)
+                    .WithMany(p => p.Recursos)
+                    .HasForeignKey(d => d.IdCurso)
+                    .HasConstraintName("FK_Recurso_Curso");
             });
 
             modelBuilder.Entity<Respuesta>(entity =>

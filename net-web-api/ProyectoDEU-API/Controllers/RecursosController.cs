@@ -49,6 +49,18 @@ namespace ProyectoDEU_API.Controllers
             return recurso;
         }
 
+        [HttpGet("curso/{idCurso}")]
+        public IActionResult GetRecursosPorCurso(Guid idCurso)
+        {
+            if (idCurso == Guid.Empty)
+            {
+                return BadRequest();
+            }
+            var result = _context.Recursos.Where(r => r.IdCurso == idCurso).AsQueryable();
+
+            return Ok(result);
+        }
+
         // PUT: api/Recursos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

@@ -14,8 +14,10 @@ namespace ProyectoDEU_API
         public Guid Id { get; set; }
         public string Titulo { get; set; } = null!;
         public string Texto { get; set; } = null!;
+        public Guid? IdCurso { get; set; }
 
         public virtual ICollection<EnlaceRecurso> EnlaceRecursos { get; set; }
         public virtual ICollection<Pregunta> Pregunta { get; set; }
+        public virtual Curso? Curso { get; set; }
     }
 }
