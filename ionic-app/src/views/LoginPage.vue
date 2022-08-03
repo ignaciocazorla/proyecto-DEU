@@ -1,12 +1,12 @@
 <template>
     <tabs-base page-title="Login">
-        <form class="login-form-container" autocomplete="on" >
+        <form class="login-form-container ion-padding" autocomplete="on" @submit.prevent="login(username, password)">
             <ion-label for="username">Username:</ion-label>
             <ion-input type="text" id="username" v-model="username" />
             <ion-label for="contraseña">Contraseña:</ion-label>
             <ion-input type="password" id="contraseña" v-model="password" />
             <!--<ion-button class="login_button" type="submit">Ingresar</ion-button> -->
-            <ion-button @click="login(username, password)">Ingresar</ion-button>
+            <ion-button type="submit">Ingresar</ion-button>
             <br>
             <a href="/signup">¿Todavía no creaste un usuario? Registrar.</a>
         </form>
@@ -36,6 +36,8 @@ export default {
                 console.log(resp.data);
                 if(resp.data.isValid){
                     this.$store.dispatch("usuario/login", resp.data);
+                    localStorage.setItem('token', resp.data.authToken);
+                    localStorage.setItem('usuario', JSON.stringify(resp.data.user));
                     this.redirect();
                 }
             });

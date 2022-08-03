@@ -45,9 +45,8 @@ export default({
         loading.showMsg("Creando curso...");
 
         axios.post("/api/Cursos", {
-            "id": "3fa85f64-5717-4562-b3fc-2c963f66af34",
             "nombre": this.nombreCurso,
-            "idDocente": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "idDocente": this.$store.getters["usuario/usuario"].id,
         }).then(resp => {
             loading.hide();  
             alertDialog.showAlertMsg("Curso creado con exito!");

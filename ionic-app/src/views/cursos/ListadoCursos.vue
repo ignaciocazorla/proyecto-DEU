@@ -1,8 +1,12 @@
 <template>
     <tabs-base page-title="Mis cursos">
         <ion-list>
-          <ion-item router-link="cursos/add" >
+          <ion-item v-if="(this.$store.getters['usuario/usuario'].rol == 'Docente')" router-link="cursos/add" >
             <ion-button class="boton-agregar-item">+ Nuevo curso </ion-button>
+          </ion-item>
+
+          <ion-item v-if="(this.$store.getters['usuario/usuario'].rol == 'Estudiante')" router-link="cursos/search" >
+            <ion-button class="boton-agregar-item">+ Inscripcion a cursos </ion-button>
           </ion-item>
 
           <ion-text>
@@ -15,7 +19,7 @@
               <!-- <p>Cant. de estudiantes: {{curso.idEstudiates}}</p> -->
             </ion-button>
             <!-- <ion-button button id="click-trigger" slot="end"> -->
-            <ion-button button @click="openPopover($event, curso.id)" slot="end">
+            <ion-button  v-if="(this.$store.getters['usuario/usuario'].rol == 'Docente')" button @click="openPopover($event, curso.id)" slot="end">
               <!--<ion-icon slot="icon-only" :icon="ellipsisVertical"></ion-icon> -->
               Más
             </ion-button>
@@ -61,11 +65,18 @@ export default({
   },
   async mounted() {
 
+    let config = {
+        headers: {
+          "authorization": "Bearer " + localStorage.getItem("token"),
+      }
+    }
+
     //console.log(this.$store.getters["usuario/usuario"])
     
     loading.showMsg('Cargando cursos...');
 
-    axios.get("/api/Cursos/")
+    //axios.get("/api/Cursos/Docente/" + this.$store.getters["usuario/usuario"].id)
+    axios.get("/api/Cursos/usuario/", config)
     .then(resp => {
         console.log(resp);
         this.$store.commit("cursos/load",resp.data);
@@ -125,7 +136,7 @@ export default({
   computed: {
     cursos() {
       return this.$store.getters["cursos/cursos"];
-    }
+    },
   },
   setup(){
       return{

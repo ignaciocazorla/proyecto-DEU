@@ -4,8 +4,19 @@ import WelcomePage from '../views/WelcomePage.vue'
 import store from '../store/index.js';
 
 function isAuthenticated(){
-  let token = store.getters["usuario/token"]
-  return (token != null);
+  let token = localStorage.getItem("token");
+  return (token != undefined);
+}
+
+function setStore(){
+  let token = localStorage.getItem("token");
+  let usuario = localStorage.getItem("usuario");
+  if(store.getters["usuario/token"] == undefined){
+    store.dispatch("usuario/login", {
+      "authToken": token,
+      "user": JSON.parse(usuario),
+  });
+  }
 }
 
 const routes = [
@@ -23,10 +34,6 @@ const routes = [
     component: () => import('../views/SignupPage.vue')
   },
   {
-    path: '/cursos/search',
-    component: () => import('../views/BuscarCursoPage.vue')
-  },
-  {
     path: '/tabs/',
     component: TabsPage,
     children: [
@@ -41,6 +48,11 @@ const routes = [
       {
         path: 'cursos',
         component: () => import('@/views/Tab2Page.vue'),
+        meta: {requiresLogin:true},
+      },
+      {
+        path: 'cursos/search',
+        component: () => import('../views/cursos/BuscarCursoPage.vue'),
         meta: {requiresLogin:true},
       },
       {
@@ -69,7 +81,7 @@ const routes = [
         meta: {requiresLogin:true},
       },
       {
-        path: 'tab3',
+        path: 'ajustes',
         component: () => import('@/views/Tab3Page.vue'),
         meta: {requiresLogin:true},
       }
@@ -86,7 +98,8 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresLogin) && !(isAuthenticated())) {
       next("/login")
   } else {
-      next()
+      setStore();
+      next();
   }
 })
 

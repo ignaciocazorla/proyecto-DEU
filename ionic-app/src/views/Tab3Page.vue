@@ -20,6 +20,13 @@
           <ion-label> Activar/desactivar modo oscuro</ion-label>
           <ion-toggle :checked="darkMode" @ionChange="cambiarTema()" ></ion-toggle>
         </ion-item>
+
+         <ion-list-header>
+          <ion-label>Cuenta</ion-label>
+        </ion-list-header>
+        <ion-item>
+          <ion-button @click="logout">Cerrar sesión</ion-button>
+        </ion-item>
       </ion-list>
     </ion-content>
   </ion-page>
@@ -27,7 +34,7 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonToggle, IonList, IonListHeader, IonItem, IonLabel,} from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonToggle, IonList, IonListHeader, IonItem, IonLabel, IonButton,} from '@ionic/vue';
 
 export default defineComponent({
 
@@ -37,23 +44,24 @@ export default defineComponent({
       darkMode: false,
     }
   },
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonToggle, IonList, IonListHeader, IonItem, IonLabel,},
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonToggle, IonList, IonListHeader, IonItem, IonLabel, IonButton,},
   methods:{
     cambiarTema(){
-      this.darkMode = !this.darkMode;
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-      console.log(prefersDark.matches);
-      this.darkMode = prefersDark.matches;
-      
+      this.darkMode = !this.darkMode;     
       document.body.classList.toggle('dark');
+    },
+
+    logout(){
+      localStorage.clear();
+      this.$router.replace({ path: '/login' })
     }
   },
   mounted() {
+    //https://developer.mozilla.org/es/docs/Web/API/MediaQueryList/addListener
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    this.darkMode = prefersDark.matches;
-    //prefersDark.addEventListener(() => {cambiarTema()})
-    if(this.darkMode){
-      document.body.classList.toggle('dark');
+    //this.darkMode = prefersDark.matches;
+    if(prefersDark.matches){
+      this.cambiarTema();
     }
   }
 });
