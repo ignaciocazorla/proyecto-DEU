@@ -34,20 +34,22 @@ namespace ProyectoDEU_API.Controllers
 
         // GET: api/Recursos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Recurso>> GetRecurso(Guid id)
+        public IActionResult GetRecurso(Guid id)
         {
           if (_context.Recursos == null)
           {
               return NotFound();
           }
-            var recurso = await _context.Recursos.FindAsync(id);
+            var result = _context.Recursos
+                .Include(e => e.Enlaces)
+                .Where(e => e.Id == id);
 
-            if (recurso == null)
+            if (result == null)
             {
                 return NotFound();
             }
 
-            return recurso;
+            return Ok(result);
         }
 
         [HttpGet("curso/{idCurso}")]
@@ -57,7 +59,10 @@ namespace ProyectoDEU_API.Controllers
             {
                 return BadRequest();
             }
-            var result = _context.Recursos.Where(r => r.IdCurso == idCurso).AsQueryable();
+            var result = _context.Recursos
+                .Include(e => e.Enlaces)
+                .Where(r => r.IdCurso == idCurso)
+                .AsQueryable();
 
             return Ok(result);
         }
@@ -151,7 +156,8 @@ namespace ProyectoDEU_API.Controllers
             {
                 return NotFound();
             }
-            var recurso = await _context.Recursos.FindAsync(id);
+            var recurso = await _context.Recursos
+                .FindAsync(id);
             if (recurso == null)
             {
                 return NotFound();
