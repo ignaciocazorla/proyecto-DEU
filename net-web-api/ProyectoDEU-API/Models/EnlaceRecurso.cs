@@ -7,7 +7,8 @@ namespace ProyectoDEU_API
     {
         public Guid Id { get; set; }
         public Guid IdRecurso { get; set; }
-        public string Enlace { get; set; } = null!;
+        public string? Url { get; set; }
+        public string? Nombre { get; set; }
 
         public virtual Recurso IdRecursoNavigation { get; set; } = null!;
     }

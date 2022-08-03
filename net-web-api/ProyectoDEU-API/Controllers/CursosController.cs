@@ -47,20 +47,23 @@ namespace ProyectoDEU_API.Controllers
 
         // GET: api/Cursos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Curso>> GetCurso(Guid id)
+        public IActionResult GetCurso(Guid id)
         {
           if (_context.Cursos == null)
           {
               return NotFound();
           }
-            var curso = await _context.Cursos.FindAsync(id);
+            var result = _context.Cursos
+                .Include(e => e.Recursos)
+                .Include("Recursos.Enlaces")
+                .Where(e => e.Id == id);
 
-            if (curso == null)
+            if (result == null)
             {
                 return NotFound();
             }
 
-            return curso;
+            return Ok(result);
         }
 
         [HttpGet("usuario")]
@@ -101,6 +104,8 @@ namespace ProyectoDEU_API.Controllers
             if (rol == UserRoles.Docente)
             {
                 result = _context.Cursos
+                        .Include(e => e.Recursos)
+                        .Include("Recursos.Enlaces")
                         .Where(e => e.IdDocente == userid)
                         //.Include(c => c.Docente)
                         .AsQueryable();
@@ -109,9 +114,11 @@ namespace ProyectoDEU_API.Controllers
             {
                 Estudiante estudiante = _context.Estudiantes.FindAsync(userid).Result;
                 result = _context.Cursos
-                         .Where(e => e.Estudiantes.Contains(estudiante))
-                         //.Include(c => c.Docente)
-                         .AsQueryable();
+                        .Include(e => e.Recursos)
+                        .Include("Recursos.Enlaces")
+                        .Where(e => e.Estudiantes.Contains(estudiante))
+                        //.Include(c => c.Docente)
+                        .AsQueryable();
             }
 
             
@@ -203,7 +210,7 @@ namespace ProyectoDEU_API.Controllers
 
         // POST: api/Cursos/inscribir
         [HttpPost("inscribir")]
-        public async Task<IActionResult> InscribirEstudiante([FromBody] InscripcionCurso inscripcion)
+        public async Task<IActionResult> InscribirEstudiante([FromBody] InscripcionCursoDTO inscripcion)
         {
             if (!CursoExists(inscripcion.CursoId))
             {

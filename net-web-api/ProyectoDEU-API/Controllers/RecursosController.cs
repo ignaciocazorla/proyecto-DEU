@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProyectoDEU_API;
+using ProyectoDEU_API.Models.DTO;
 
 namespace ProyectoDEU_API.Controllers
 {
@@ -95,13 +96,33 @@ namespace ProyectoDEU_API.Controllers
         // POST: api/Recursos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Recurso>> PostRecurso(Recurso recurso)
+        public async Task<ActionResult<Recurso>> PostRecurso(RecursoDTO recursoDTO)
         {
             if (_context.Recursos == null)
             {
                 return Problem("Entity set 'ProyectoDEUContext.Recursos'  is null.");
             }
-            recurso.Id = Guid.NewGuid();
+            var recurso = new Recurso
+            {
+                Id = Guid.NewGuid(),
+                Titulo = recursoDTO.Titulo,
+                Texto = recursoDTO.Texto,
+                IdCurso = recursoDTO.IdCurso
+            };
+
+            foreach (var e in recursoDTO.Enlaces)
+            {
+                var enlace = new EnlaceRecurso
+                {
+                    Id = Guid.NewGuid(),
+                    IdRecurso = recurso.Id,
+                    Url = e.Url,
+                    Nombre = e.Nombre
+                };
+                recurso.Enlaces.Add(enlace);
+            };
+
+            //recurso.Id = Guid.NewGuid();
             _context.Recursos.Add(recurso);
             try
             {

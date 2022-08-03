@@ -86,7 +86,7 @@ namespace ProyectoDEU_API
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.HasOne(d => d.IdRecursoNavigation)
-                    .WithMany(p => p.EnlaceRecursos)
+                    .WithMany(p => p.Enlaces)
                     .HasForeignKey(d => d.IdRecurso)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_EnlaceRecurso_Recurso");
