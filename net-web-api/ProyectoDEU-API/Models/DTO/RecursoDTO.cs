@@ -9,6 +9,12 @@
         public virtual ICollection<EnlaceRecursoDTO> Enlaces { get; set; }
     }
 
+    public class RecursoModificadoDTO: RecursoDTO
+    {
+        public virtual ICollection<Guid> EnlacesBaja { get; set; }
+
+    }
+
     public class EnlaceRecursoDTO
     {
         public string? Url { get; set; }

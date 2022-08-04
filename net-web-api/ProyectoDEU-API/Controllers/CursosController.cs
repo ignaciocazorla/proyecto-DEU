@@ -196,6 +196,7 @@ namespace ProyectoDEU_API.Controllers
             {
                 return NotFound();
             }
+            
             var curso = await _context.Cursos.FindAsync(id);
             if (curso == null)
             {

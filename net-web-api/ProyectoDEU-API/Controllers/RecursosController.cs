@@ -70,14 +70,40 @@ namespace ProyectoDEU_API.Controllers
         // PUT: api/Recursos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRecurso(Guid id, Recurso recurso)
+        public async Task<IActionResult> PutRecurso(Guid id, RecursoModificadoDTO recurso)
         {
-            if (id != recurso.Id)
-            {
+            //if (id != recurso.Id)
+            //{
+            //    return BadRequest();
+            //}
+            var recursoDB = await _context.Recursos.FindAsync(id);
+            if (recursoDB == null)
                 return BadRequest();
+
+            // agrego enlaces nuevos
+            foreach (var enlace in recurso.Enlaces)
+            {
+                var e = new EnlaceRecurso
+                {
+                    Id = Guid.NewGuid(),
+                    IdRecurso = id,
+                    Url = enlace.Url,
+                    Nombre = enlace.Nombre
+                };
+                recursoDB.Enlaces.Add(e);
             }
 
-            _context.Entry(recurso).State = EntityState.Modified;
+            // borro enlaces
+            foreach (var idBaja in recurso.EnlacesBaja)
+            {
+                var e = await _context.EnlaceRecursos.FindAsync(idBaja);
+                if (e != null)
+                    _context.Entry(e).State = EntityState.Deleted;
+
+                //recursoDB.Enlaces.Remove(e);
+            }
+
+            _context.Entry(recursoDB).State = EntityState.Modified;
 
             try
             {
@@ -163,6 +189,11 @@ namespace ProyectoDEU_API.Controllers
                 return NotFound();
             }
 
+            var enlaces = _context.EnlaceRecursos.Where(e => e.IdRecurso == id).AsQueryable();
+            foreach (var enlace in enlaces)
+            {
+                _context.EnlaceRecursos.Remove(enlace);
+            }
             _context.Recursos.Remove(recurso);
             await _context.SaveChangesAsync();
 
