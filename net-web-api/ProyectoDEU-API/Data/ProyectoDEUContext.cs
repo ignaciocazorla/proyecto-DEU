@@ -88,7 +88,7 @@ namespace ProyectoDEU_API
                 entity.HasOne(d => d.IdRecursoNavigation)
                     .WithMany(p => p.Enlaces)
                     .HasForeignKey(d => d.IdRecurso)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.ClientCascade)
                     .HasConstraintName("FK_EnlaceRecurso_Recurso");
             });
 
@@ -104,7 +104,7 @@ namespace ProyectoDEU_API
                     .WithMany(p => p.Estudiantes)
                     .UsingEntity<Dictionary<string, object>>(
                         "EstudianteCurso",
-                        l => l.HasOne<Curso>().WithMany().HasForeignKey("IdCurso").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_EstudianteCurso_Curso1"),
+                        l => l.HasOne<Curso>().WithMany().HasForeignKey("IdCurso").OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_EstudianteCurso_Curso1"),
                         r => r.HasOne<Estudiante>().WithMany().HasForeignKey("IdEstudiante").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_EstudianteCurso_Estudiante1"),
                         j =>
                         {
@@ -156,6 +156,7 @@ namespace ProyectoDEU_API
                 entity.HasOne(d => d.Curso)
                     .WithMany(p => p.Recursos)
                     .HasForeignKey(d => d.IdCurso)
+                    .OnDelete(DeleteBehavior.ClientCascade)
                     .HasConstraintName("FK_Recurso_Curso");
             });
 

@@ -189,15 +189,27 @@ namespace ProyectoDEU_API.Controllers
                 return NotFound();
             }
 
+            //var enlaces = _context.EnlaceRecursos.Where(e => e.IdRecurso == id).AsQueryable();
+            //foreach (var enlace in enlaces)
+            //{
+            //    _context.EnlaceRecursos.Remove(enlace);
+            //}
+
+            VaciarRecurso(id);
+
+            _context.Recursos.Remove(recurso);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private void VaciarRecurso(Guid id)
+        {
             var enlaces = _context.EnlaceRecursos.Where(e => e.IdRecurso == id).AsQueryable();
             foreach (var enlace in enlaces)
             {
                 _context.EnlaceRecursos.Remove(enlace);
             }
-            _context.Recursos.Remove(recurso);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private bool RecursoExists(Guid id)

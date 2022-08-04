@@ -196,11 +196,36 @@ namespace ProyectoDEU_API.Controllers
             {
                 return NotFound();
             }
-            
-            var curso = await _context.Cursos.FindAsync(id);
+
+            var curso = _context.Cursos
+                .Include("Estudiantes")
+                .Where(c => c.Id == id).First();
+                //.FindAsync(id);
             if (curso == null)
             {
                 return NotFound();
+            }
+
+            // primero borrar recursos del curso
+            var recursos = _context.Recursos
+                .Include(r => r.Enlaces)
+                .Where(e => e.IdCurso == curso.Id)
+                .AsQueryable();
+
+            foreach (var recurso in recursos)
+            {
+                //vacio recurso
+                foreach (var enlace in recurso.Enlaces)
+                {
+                    //_context.EnlaceRecursos.Remove(enlace);
+                    _context.Entry(enlace).State = EntityState.Deleted;
+                }
+
+                //await _context.SaveChangesAsync();
+
+                // borro recurso
+                //_context.Entry(recurso).State = EntityState.Deleted;
+                _context.Recursos.Remove(recurso);
             }
 
             _context.Cursos.Remove(curso);
