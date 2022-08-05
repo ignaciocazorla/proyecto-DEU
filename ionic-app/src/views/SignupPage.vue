@@ -1,32 +1,32 @@
 <template>
     <tabs-base pageTitle="Registrarse">
-        <form @submit.prevent="onSubmit(username,email,repeatEmail,password,repeatPassword,tipoUsuario)">
+        <form class="ion-padding" @submit.prevent="onSubmit(username,email,repeatEmail,password,repeatPassword,tipoUsuario)">
           <ion-list>
             <ion-item>
-              <ion-label for="nombre de usuario">Nombre de usuario:</ion-label>
+              <ion-label position="floating" for="nombre de usuario">Nombre de usuario</ion-label>
               <ion-input type="text" id="username" required="true" v-model="username" />
             </ion-item>
             <ion-item>
-              <ion-label for="email">Email:</ion-label>
+              <ion-label position="floating" for="email">Email</ion-label>
               <!-- <ion-input type="text" name="email" id="email" v-model="email" /> -->
               <ion-input type="text" id="email" v-model="email" />
               <!-- <span v-if="!v$.email.required">Email is required</span>
               <span v-if="!v$.email.email">Email is invalid</span> -->
             </ion-item>
             <ion-item>
-              <ion-label for="email">Confirmar email:</ion-label>
+              <ion-label position="floating" for="email">Confirmar email</ion-label>
               <ion-input type="text" id="email" required="true" v-model="repeatEmail" />
             </ion-item>
             <ion-item>
-              <ion-label for="password" >Contraseña:</ion-label>
+              <ion-label position="floating" for="password" >Contraseña</ion-label>
               <ion-input type="password" id="password" required="true" v-model="password" />
             </ion-item>
             <ion-item>
-              <ion-label for="password">Confirmar contraseña:</ion-label>
+              <ion-label position="floating" for="password">Confirmar contraseña</ion-label>
               <ion-input type="password" id="password" required="true" v-model="repeatPassword" />
             </ion-item>
               <ion-item>
-                <ion-label for="Seleccionar tipo de usuario">Seleccionar tipo de usuario:</ion-label>
+                <ion-label position="floating" for="Seleccionar tipo de usuario">Seleccionar tipo de usuario</ion-label>
                  <ion-select id="customPopoverSelect" interface="popover" placeholder="-" v-model="tipoUsuario">
                   <ion-select-option value="estudiante">Estudiante</ion-select-option>
                   <ion-select-option value="docente">Docente</ion-select-option>
@@ -135,6 +135,12 @@ export default {
 </script>
 
 <style scoped>
+
+ion-button{
+  width: 100%;
+  margin-top: 10%;
+}
+
 /*ion-input{
   padding: 12px 20px;
   margin: 8px 0;

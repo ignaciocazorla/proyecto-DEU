@@ -11,8 +11,10 @@
         <ion-content>
             <div class="form-container">
                 <form>
-                <ion-label for="nombreCurso">Nombre del curso:</ion-label>
-                <ion-input type="text" v-model="nombreCurso" />
+                  <ion-item>
+                    <ion-label position="floating" for="nombreCurso">Nombre del curso:</ion-label>
+                    <ion-input type="text" v-model="nombreCurso" />
+                  </ion-item>
                 <ion-button @click="postCurso">Crear</ion-button>
                 </form>
             </div>
@@ -21,7 +23,7 @@
 </template>
 
 <script>
-import {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonLabel, IonBackButton, IonInput, } from '@ionic/vue';
+import {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonLabel, IonBackButton, IonInput, IonItem, } from '@ionic/vue';
 import axios from 'axios';
 import { loading } from '../overlay-views/loading.js';
 import { alertDialog } from '../overlay-views/alertDialog.js';
@@ -32,7 +34,7 @@ export default({
         nombreCurso: ''
     };
   },
-  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonLabel, IonBackButton, IonInput },
+  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonLabel, IonBackButton, IonInput, IonItem, },
 
   methods: {
     postCurso() {

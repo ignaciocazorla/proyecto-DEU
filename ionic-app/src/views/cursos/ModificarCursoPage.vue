@@ -11,8 +11,10 @@
         <ion-content>
             <div class="form-container">
                 <form v-on="curso" v-if="curso != undefined">
-                <ion-label for="nombreCurso">Nombre del curso:</ion-label>
-                <ion-input type="text" v-model="nombreCurso" :value="curso.nombre" />
+                    <ion-item>
+                        <ion-label position="floating" for="nombreCurso">Nombre del curso:</ion-label>
+                        <ion-input type="text" v-model="nombreCurso" :value="curso.nombre" />
+                    </ion-item>
                 <ion-button @click="updateCurso(curso, nombreCurso)">Modificar</ion-button>
                 </form>
             </div>
@@ -21,13 +23,13 @@
 </template>
 
 <script>
-import {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonLabel, IonButton, IonButtons, IonBackButton } from '@ionic/vue';
+import {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonLabel, IonButton, IonButtons, IonBackButton, IonItem, } from '@ionic/vue';
 import axios from 'axios';
 import { loading } from '../overlay-views/loading.js';
 import { alertDialog } from '../overlay-views/alertDialog.js';
 
 export default {
-    components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonLabel, IonButton, IonButtons, IonBackButton },
+    components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonLabel, IonButton, IonButtons, IonBackButton, IonItem, },
     methods:{
         updateCurso(curso, nuevoNombre){
             loading.showMsg("Modificando curso...");
@@ -74,4 +76,9 @@ export default {
   top: 50%;
   transform: translateY(-50%);
 }
+
+ion-button{
+    margin-top: 10%;
+}
+
 </style>

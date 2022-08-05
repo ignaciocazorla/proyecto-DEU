@@ -53,7 +53,7 @@ const recursos = {
     namespaced: true,
     state () {
         return {
-            recursos: []
+            recursos: [],
         };
     },
     getters: {

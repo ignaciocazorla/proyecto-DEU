@@ -3,10 +3,11 @@
         <ion-header>
         </ion-header>
         <ion-content fullscreen="true">
+            
             <div class="container ion-padding ion-align-self-center">
                 <h1> NombreDeLaApp </h1>
                 <p> NombreDeLaApp te permite gestionar y acceder tus materiales educativos. 
-                    Ádemas es una herramienta que permite enseñar y aprender de una manera distinta.
+                    Además es una herramienta que permite enseñar y aprender de una manera distinta.
                 </p>
                 <ion-button router-link="login"> Comenzar </ion-button>
             </div>

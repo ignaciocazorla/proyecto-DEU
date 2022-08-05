@@ -9,12 +9,22 @@
             </ion-toolbar>
         </ion-header>
         <ion-content>
-            <ion-card v-if="recurso != undefined">
+            <ion-card v-if="recurso == null">
+            </ion-card>
+            <ion-card v-else>
                 <ion-card-header v-model="recurso">
                 <ion-card-title> {{ recurso.titulo }} </ion-card-title>
                 </ion-card-header>
                 <ion-card-content>
                     {{ recurso.texto }}
+                    <div v-if="recurso.enlaces.length != 0">
+                        <ion-list>
+                            <ion-list-header>Enlaces</ion-list-header>
+                            <ion-item v-bind:key="enlace.nombre" v-for="enlace in recurso.enlaces">
+                                <a :href="enlace.url" target="_blank">{{enlace.nombre}}</a>
+                            </ion-item>
+                        </ion-list>
+                    </div>
                 </ion-card-content>
             </ion-card>
         </ion-content>
@@ -22,20 +32,25 @@
 </template>
 
 <script>
-import {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle, } from '@ionic/vue';
+import {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonList, IonListHeader, IonItem, } from '@ionic/vue';
 import axios from 'axios';
 import { loading } from '../overlay-views/loading.js';
+//import { Browser } from '@capacitor/browser'; //Para aplicacion nativa
 
 export default {
-    components:{  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle, },
+    data(){
+        return{
+            recursoActual: null
+        }
+    },
+    components:{  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonList, IonListHeader, IonItem,},
     mounted(){
-        let recurso = this.$store.getters["recursos/recurso"](this.$route.params.id);
-        if(recurso == undefined){
+        this.recursoActual = this.$store.getters["recursos/recurso"](this.$route.params.id);
+        if(this.recursoActual == null){
             loading.showMsg("Cargando...");
             axios.get("/api/Recursos/" + this.$route.params.id)
             .then(resp => {
-                console.log(resp);
-                this.$store.commit("recursos/load",[resp.data]);
+                this.recursoActual = resp.data[0];
                 loading.hide();
             })
             .catch(err => {
@@ -44,9 +59,14 @@ export default {
             });
         }
     },
+    methods:{
+        /*async openUrl(url){
+            await Browser.open({ url: url });
+        }*/
+    },
     computed:{
         recurso(){
-            return this.$store.getters["recursos/recurso"](this.$route.params.id);
+            return this.recursoActual;
         }
     }
 }

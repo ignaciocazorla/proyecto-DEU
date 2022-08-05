@@ -19,13 +19,19 @@
               <h1 class="empty-list-msg" v-if="recursos.length == 0"> No hay elementos para mostrar</h1>
 
               <div v-bind:key="recurso.id" v-for="recurso in recursos">
-                <ion-card button :router-link="`recursos/${recurso.id}`">
+                <ion-card >
                   <ion-card-header>
-                    <ion-card-title> {{ recurso.titulo }} </ion-card-title>
+                    <ion-item button :router-link="`recursos/${recurso.id}`">
+                      <ion-card-title> {{ recurso.titulo }} </ion-card-title>
+                    </ion-item>
                   </ion-card-header>
+                  <ion-card-content>
+                  
+                    <ion-button v-if="(this.$store.getters['usuario/usuario'].rol == 'Docente')" size="small" fill="outline" @click="deleteRecurso(recurso.id)" slot="end">Eliminar</ion-button>
+                    <ion-button v-if="(this.$store.getters['usuario/usuario'].rol == 'Docente')" size="small" fill="outline" :router-link="`recursos/update/${recurso.id}`" slot="end">Modificar</ion-button>
+                  
+                  </ion-card-content>
                 </ion-card>
-                <ion-button v-if="(this.$store.getters['usuario/usuario'].rol == 'Docente')" size="small" fill="outline" @click="deleteRecurso(recurso.id)">Eliminar</ion-button>
-                <ion-button v-if="(this.$store.getters['usuario/usuario'].rol == 'Docente')" size="small" fill="outline">Modificar</ion-button>
               </div>
             </ion-list>
         </ion-content>
@@ -34,14 +40,14 @@
 
 <script>
 import { defineComponent } from 'vue';
-import {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonBackButton, IonList, IonCard, IonCardHeader, /*IonCardContent,*/ IonCardTitle, } from '@ionic/vue';
+import {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonBackButton, IonList, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonItem, } from '@ionic/vue';
 import axios from 'axios';
 import { loading } from '../overlay-views/loading.js';
 import { alertDialog } from '../overlay-views/alertDialog.js';
 
 export default defineComponent({
   name: 'DetalleCursos',
-  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonBackButton, IonList, IonCard, IonCardHeader, /*IonCardContent,*/ IonCardTitle, },
+  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonBackButton, IonList, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonItem, },
   data () {
     return {
         cursoId: this.$route.params.id,

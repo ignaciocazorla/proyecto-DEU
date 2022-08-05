@@ -71,6 +71,11 @@ const routes = [
         meta: {requiresLogin:true},
       },
       {
+        path: 'cursos/recursos/update/:id',
+        component: () => import('@/views/recursos/ModificarRecursoPage.vue'),
+        meta: {requiresLogin:true},
+      },
+      {
         path: 'cursos/add',
         component: () => import('@/views/cursos/CrearCursoPage.vue'),
         meta: {requiresLogin:true},

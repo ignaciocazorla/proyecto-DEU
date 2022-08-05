@@ -24,8 +24,9 @@
          <ion-list-header>
           <ion-label>Cuenta</ion-label>
         </ion-list-header>
-        <ion-item>
-          <ion-button @click="logout">Cerrar sesión</ion-button>
+        <ion-item button>
+          <!-- <ion-button @click="logout">Cerrar sesión</ion-button> -->
+          <ion-text @click="logout">Cerrar sesión</ion-text>
         </ion-item>
       </ion-list>
     </ion-content>
@@ -34,7 +35,7 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonToggle, IonList, IonListHeader, IonItem, IonLabel, IonButton,} from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonToggle, IonList, IonListHeader, IonItem, IonLabel, /*IonButton,*/} from '@ionic/vue';
 
 export default defineComponent({
 
@@ -44,7 +45,7 @@ export default defineComponent({
       darkMode: false,
     }
   },
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonToggle, IonList, IonListHeader, IonItem, IonLabel, IonButton,},
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonToggle, IonList, IonListHeader, IonItem, IonLabel, /*IonButton,*/ },
   methods:{
     cambiarTema(){
       this.darkMode = !this.darkMode;     
@@ -58,11 +59,11 @@ export default defineComponent({
   },
   mounted() {
     //https://developer.mozilla.org/es/docs/Web/API/MediaQueryList/addListener
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    //const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
     //this.darkMode = prefersDark.matches;
-    if(prefersDark.matches){
+    /*if(prefersDark.matches){
       this.cambiarTema();
-    }
+    }*/
   }
 });
 </script>
