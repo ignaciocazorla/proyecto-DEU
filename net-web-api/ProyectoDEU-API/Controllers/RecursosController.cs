@@ -80,6 +80,8 @@ namespace ProyectoDEU_API.Controllers
             if (recursoDB == null)
                 return BadRequest();
 
+            recursoDB.Titulo = recurso.Titulo;
+            recursoDB.Texto = recurso.Texto;
             // agrego enlaces nuevos
             foreach (var enlace in recurso.Enlaces)
             {
