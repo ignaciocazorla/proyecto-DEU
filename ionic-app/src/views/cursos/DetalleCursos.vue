@@ -28,7 +28,7 @@
                   <ion-card-content>
                   
                     <ion-button v-if="(this.$store.getters['usuario/usuario'].rol == 'Docente')" size="small" fill="outline" @click="deleteRecurso(recurso.id)" slot="end">Eliminar</ion-button>
-                    <ion-button v-if="(this.$store.getters['usuario/usuario'].rol == 'Docente')" size="small" fill="outline" :router-link="`recursos/update/${recurso.id}`" slot="end">Modificar</ion-button>
+                    <!-- <ion-button v-if="(this.$store.getters['usuario/usuario'].rol == 'Docente')" size="small" fill="outline" :router-link="`recursos/update/${recurso.id}`" slot="end">Modificar</ion-button> -->
                   
                   </ion-card-content>
                 </ion-card>
@@ -99,6 +99,7 @@ export default defineComponent({
         loading.hide();
     })
     .catch(err => {
+      console.log(this.cursoId)
       console.log(err);
       loading.hide();
     })

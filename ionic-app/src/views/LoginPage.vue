@@ -18,7 +18,7 @@
 
 <script>
 import TabsBase from '../components/base/TabsBase.vue';
-import { IonInput, IonLabel, IonButton, } from '@ionic/vue';
+import { IonInput, IonLabel, IonButton, IonItem, } from '@ionic/vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { loading } from './overlay-views/loading.js';
@@ -29,7 +29,8 @@ export default {
         TabsBase,
         IonInput,
         IonLabel,
-        IonButton
+        IonButton,
+        IonItem,
     },
     data(){
         return{

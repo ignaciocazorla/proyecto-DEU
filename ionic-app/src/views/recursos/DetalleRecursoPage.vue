@@ -15,7 +15,7 @@
                 <ion-card-header v-model="recurso">
                 <ion-card-title> {{ recurso.titulo }} </ion-card-title>
                 </ion-card-header>
-                <ion-card-content>
+                <ion-card-content class="textarea-spaces">
                     {{ recurso.texto }}
                     <div v-if="recurso.enlaces.length != 0">
                         <ion-list>
@@ -25,6 +25,9 @@
                             </ion-item>
                         </ion-list>
                     </div>
+                    <ion-item>
+                        <ion-button v-if="(this.$store.getters['usuario/usuario'].rol == 'Docente')" size="small" fill="outline" :router-link="`/tabs/cursos/recursos/update/${recurso.id}`" slot="end">Modificar</ion-button>
+                    </ion-item>
                 </ion-card-content>
             </ion-card>
         </ion-content>
@@ -32,7 +35,7 @@
 </template>
 
 <script>
-import {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonList, IonListHeader, IonItem, } from '@ionic/vue';
+import {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonList, IonListHeader, IonItem, IonButton, } from '@ionic/vue';
 import axios from 'axios';
 import { loading } from '../overlay-views/loading.js';
 //import { Browser } from '@capacitor/browser'; //Para aplicacion nativa
@@ -43,7 +46,7 @@ export default {
             recursoActual: null
         }
     },
-    components:{  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonList, IonListHeader, IonItem,},
+    components:{  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonList, IonListHeader, IonItem, IonButton, },
     mounted(){
         this.recursoActual = this.$store.getters["recursos/recurso"](this.$route.params.id);
         if(this.recursoActual == null){
@@ -71,3 +74,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.textarea-spaces{
+    white-space: pre-wrap;
+}
+</style>

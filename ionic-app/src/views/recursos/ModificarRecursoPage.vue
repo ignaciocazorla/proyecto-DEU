@@ -113,8 +113,13 @@ export default({
             "enlacesBaja": this.quitar,
         }).then(() => {
             loading.hide();  
-            alertDialog.showAlertMsg("Recurso modificado con éxito!");
-            this.$store.dispatch('recursos/add', this.recursoActual);
+            this.$store.dispatch('recursos/update', this.recursoActual);
+            alertDialog.showAlertMsgWithButtons("Recurso modificado con éxito!", 
+            [{
+                text: 'Aceptar',
+                role: 'accept',
+                handler: () => {this.$router.push({path: '/tabs/cursos/recursos/' +  this.$route.params.id})}
+            }])
         })
         .catch(err => {
             loading.hide();

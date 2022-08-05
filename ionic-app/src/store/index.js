@@ -75,6 +75,10 @@ const recursos = {
         },
         delete(state, id){
             state.recursos = state.recursos.filter((recurso) => recurso.id != id);
+        },
+        update(state, recursoActual){
+            let index = state.recursos.findIndex((recurso) => recurso.id != recursoActual.id);
+            state.recursos[index] = recursoActual;
         }
     },
     actions:{
@@ -86,7 +90,10 @@ const recursos = {
         },
         delete(context, id){
             context.commit('delete', id);
-        }
+        },
+        update(context, recurso){
+            context.commit('update', recurso);
+        },
     }
 }
 
